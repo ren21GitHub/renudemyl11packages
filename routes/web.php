@@ -1,6 +1,7 @@
 <?php
 
 use App\Helpers\ImageFilters;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use App\Models\User;
@@ -46,6 +47,14 @@ Route::middleware('auth')->group(function () {
     //         ->name('users.csv');
     //     Route::get('export-pdf', [UserController::class, 'exportPdf'])
     //         ->name('users.pdf');
+
+    // SHOPPING CART
+        Route::get('shop', [CartController::class, 'shop'])->name('shop');
+        Route::get('cart', [CartController::class, 'cart'])->name('cart');
+        Route::get('add-to-cart/{product_id}', [CartController::class, 'addToCart'])->name('add-to-cart');
+        Route::get('qty-increment/{rowId}', [CartController::class, 'qtyIncrement'])->name('qty-increment');
+        Route::get('qty-decrement/{rowId}', [CartController::class, 'qtyDecrement'])->name('qty-decrement');
+        Route::get('remove-product/{rowId}', [CartController::class, 'removeProduct'])->name('remove-product');
 });
 
 require __DIR__.'/auth.php';
@@ -80,3 +89,4 @@ Route::get('image', function(){
             ->save('crop/imageFilter3.png', 80);
         return Response::file(public_path('crop/imageFilter3.png'));
 });
+

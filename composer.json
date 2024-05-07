@@ -6,8 +6,10 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "anayarojo/shoppingcart": "^4.2",
         "barryvdh/laravel-dompdf": "^2.1",
         "barryvdh/laravel-snappy": "^1.0",
+        "illuminate/events": "*",
         "intervention/image": "^3.6",
         "laravel/breeze": "^2.0",
         "laravel/framework": "^11.0",
@@ -17,6 +19,7 @@
         "yajra/laravel-datatables-oracle": "^11.1"
     },
     "require-dev": {
+        "barryvdh/laravel-debugbar": "^3.13",
         "fakerphp/faker": "^1.23",
         "laravel/pint": "^1.13",
         "laravel/sail": "^1.26",
