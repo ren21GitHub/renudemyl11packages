@@ -4,12 +4,15 @@ use App\Helpers\ImageFilters;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
+use App\Models\Post;
 use App\Models\User;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Route;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Interfaces\ImageInterface;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 Route::get('/', function () {
     return view('welcome');
@@ -55,6 +58,45 @@ Route::middleware('auth')->group(function () {
         Route::get('qty-increment/{rowId}', [CartController::class, 'qtyIncrement'])->name('qty-increment');
         Route::get('qty-decrement/{rowId}', [CartController::class, 'qtyDecrement'])->name('qty-decrement');
         Route::get('remove-product/{rowId}', [CartController::class, 'removeProduct'])->name('remove-product');
+
+    // LARAVEL-PERMISSION
+        Route::get('create-role', function(){
+        // CREATING A ROLE    
+            /* $role = Role::create(['name' => 'publisher']);
+            return $role; */
+        
+        // CREATING A PERMISSION
+            /* $permission = Permission::create(['name' => 'edit articles']);
+            return $permission; */
+
+            $user = auth()->user();
+        // Adding permissions via a role
+            // $user->assignRole('writer');
+            // $user->getRoleNames();
+
+            // $user->givePermissionTo('edit articles');
+            // $user->getPermissionNames();
+
+        // returns 1 if user can edit articles and returns null if false
+            // $checkPermission = $user->can('edit articles');
+            // return $checkPermission;
+
+        // sample on how you can use can() method
+            if($user->can('edit articles')){
+                return 'User have permission to edit Articles';
+            }else {
+                return 'User do not have permission';
+            }
+        });
+    
+    // How to check role and permission at the blade
+        Route::get('posts', function(){
+            // $user = auth()->user();
+            // $user->assignRole('editor');
+
+            $posts = Post::all();
+            return view('post.post', compact('posts'));
+        });
 });
 
 require __DIR__.'/auth.php';
