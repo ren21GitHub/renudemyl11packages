@@ -6,11 +6,13 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use App\Models\Post;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Route;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Interfaces\ImageInterface;
+use Laravel\Socialite\Facades\Socialite;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
@@ -98,6 +100,25 @@ Route::middleware('auth')->group(function () {
             return view('post.post', compact('posts'));
         });
 });
+
+// IMPLEMENT SOCIALITE
+    Route::get('/auth/redirect', function(){
+       return Socialite::driver('github')->redirect();
+    })->name('github.login');
+    Route::get('/auth/callback', function(){
+        $user = Socialite::driver('github')->user();
+        
+        $user = User::firstOrCreate([
+            'email' => $user->email
+        ],[
+            'name' => $user->name,
+            'password' => bcrypt(Str::random(24))
+        ]);
+
+        Auth::login($user, true);
+
+        return redirect('/dashboard'); 
+    });
 
 require __DIR__.'/auth.php';
 
